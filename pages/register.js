@@ -4,11 +4,17 @@ import Link from "next/link";
 import { useState } from "react";
 import APIService from "../components/APIService";
 import Router from "next/router";
+import Swal from "sweetalert2";
 
-export default function Register() {
+export default function Register({ token }) {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+
+  if (token) {
+    console.log(token);
+    Router.push("/notelist");
+  }
 
   const handleChange = (event) => {
     if (event.target.name == "username") {
@@ -20,14 +26,25 @@ export default function Register() {
     if (event.target.name == "password") {
       setUserPassword(event.target.value);
     }
-
-    console.log(userName, userEmail, userPassword);
   };
 
   const Register = () => {
     APIService.Register({ userName, userEmail, userPassword })
       .then((response) => {
-        if (response.ok) Router.push("/login");
+        if (response.status == 200) {
+          Swal.fire(
+            "Good job!",
+            "You succesfully registered, you will redirect to login page hold tight!",
+            "success"
+          );
+          Router.push("/login");
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "Change you email or username",
+          });
+        }
       })
       .catch((error) => console.log(error));
   };
@@ -105,4 +122,14 @@ export default function Register() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps({ req, params, query }) {
+  const api_token = req.cookies.token;
+
+  return {
+    props: {
+      token: api_token,
+    },
+  };
 }

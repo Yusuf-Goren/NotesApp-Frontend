@@ -6,9 +6,13 @@ import APIService from "../components/APIService";
 import Cookies from "js-cookie";
 import Router from "next/router";
 
-export default function Login() {
+export default function Login({ token }) {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
+
+  if (token) {
+    Router.push("/notelist");
+  }
 
   const handleChange = (event) => {
     if (event.target.name == "email") {
@@ -17,8 +21,6 @@ export default function Login() {
     if (event.target.name == "password") {
       setUserPassword(event.target.value);
     }
-
-    console.log(userEmail, userPassword);
   };
 
   const Submit = () => {
@@ -87,4 +89,14 @@ export default function Login() {
       </div>
     </div>
   );
+}
+
+export async function getServerSideProps({ req, params, query }) {
+  const api_token = req.cookies.token;
+
+  return {
+    props: {
+      token: api_token,
+    },
+  };
 }

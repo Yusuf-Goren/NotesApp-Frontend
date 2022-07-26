@@ -37,7 +37,7 @@ export default class APIService {
         "x-access-token": body.token,
       },
       body: JSON.stringify(body),
-    }).then((resp) => console.log(resp));
+    }).then((resp) => resp.json());
   }
 
   static editNote(token, id, body) {
