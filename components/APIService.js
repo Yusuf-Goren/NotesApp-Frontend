@@ -19,6 +19,16 @@ export default class APIService {
     });
   }
 
+  static Logout(token) {
+    return fetch("http://127.0.0.1:5000/logout", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": token,
+      },
+    }).then((resp) => console.log(resp));
+  }
+
   static getNotes(token) {
     return fetch("http://127.0.0.1:5000/note/user", {
       method: "GET",

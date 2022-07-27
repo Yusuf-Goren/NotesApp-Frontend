@@ -5,6 +5,8 @@ import Addnote from "../components/addnote";
 import APIService from "../components/APIService";
 import Search from "../components/Search";
 import Swal from "sweetalert2";
+import Router from "next/router";
+import Cookies from "js-cookie";
 
 export default function notelist({ token }) {
   const [notes, setNotes] = useState([]);
@@ -43,6 +45,14 @@ export default function notelist({ token }) {
     });
   };
 
+  const Logout = () => {
+    APIService.Logout(token).then((resp) => {
+      Cookies.set("token", "");
+      Swal.fire("Good job!", "You succesfully logged out!", "success");
+      Router.push("/login");
+    });
+  };
+
   const getNotes = () => {
     APIService.getNotes(token).then((resp) => setNotes(resp));
   };
@@ -57,6 +67,9 @@ export default function notelist({ token }) {
       <div className={styles.find}>
         <button className={styles.findButton} onClick={() => FindNote()}>
           Find Note
+        </button>
+        <button className={styles.logoutButton} onClick={() => Logout()}>
+          LOGOUT
         </button>
       </div>
       <div className={styles.container}>
