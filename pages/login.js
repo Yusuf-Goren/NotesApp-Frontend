@@ -6,13 +6,9 @@ import APIService from "../components/APIService";
 import Cookies from "js-cookie";
 import Router from "next/router";
 
-export default function Login({ token }) {
+export default function Login() {
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
-
-  if (token) {
-    Router.push("/notelist");
-  }
 
   const handleChange = (event) => {
     if (event.target.name == "email") {
@@ -92,11 +88,16 @@ export default function Login({ token }) {
 }
 
 export async function getServerSideProps({ req, params, query }) {
-  const api_token = req.cookies.token;
-
+  const api_token = req.cookies.token ? req.cookies.token : null;
+  if (api_token) {
+    return {
+      redirect: {
+        destination: "/notelist",
+        permanent: false,
+      },
+    };
+  }
   return {
-    props: {
-      token: api_token,
-    },
+    props: {},
   };
 }

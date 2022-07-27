@@ -6,15 +6,10 @@ import APIService from "../components/APIService";
 import Router from "next/router";
 import Swal from "sweetalert2";
 
-export default function Register({ token }) {
+export default function Register() {
   const [userName, setUserName] = useState("");
   const [userEmail, setUserEmail] = useState("");
   const [userPassword, setUserPassword] = useState("");
-
-  if (token) {
-    console.log(token);
-    Router.push("/notelist");
-  }
 
   const handleChange = (event) => {
     if (event.target.name == "username") {
@@ -126,10 +121,15 @@ export default function Register({ token }) {
 
 export async function getServerSideProps({ req, params, query }) {
   const api_token = req.cookies.token;
-
+  if (api_token) {
+    return {
+      redirect: {
+        destination: "/notelist",
+        permanent: false,
+      },
+    };
+  }
   return {
-    props: {
-      token: api_token,
-    },
+    props: {},
   };
 }

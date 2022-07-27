@@ -47,7 +47,7 @@ export default function notelist({ token }) {
 
   const Logout = () => {
     APIService.Logout(token).then((resp) => {
-      Cookies.set("token", "");
+      Cookies.remove("token");
       Swal.fire("Good job!", "You succesfully logged out!", "success");
       Router.push("/login");
     });
@@ -74,7 +74,7 @@ export default function notelist({ token }) {
       </div>
       <div className={styles.container}>
         <div className={styles.noteslist}>
-          {notes ? (
+          {notes.length > 0 ? (
             notes.map((note) => (
               <Note
                 key={note.id}
